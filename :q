@@ -1,0 +1,12 @@
+age= 32
+puts age
+\n
+
+orange=300
+apple=120
+total=apple*orange
+puts total
+
+\n
+
+puts "anubhav".chars
