@@ -93,7 +93,7 @@ class BstFunctions
     end
   end
 
-  # remove function has some corner cases error unable to resolve now
+  # remove function fixed
   def remove(value, node=@root)
     if node == nil
       return nil
@@ -106,7 +106,7 @@ class BstFunctions
       if node.left != nil && node.right != nil
         rmin = min_ele(node.right)
         node.value = rmin.value
-        root.right = remove(rmin.value, node.right)
+        node.right = remove(rmin.value, node.right)
       elsif node.left != nil
         node = node.left
       elsif node.right != nil
