@@ -1,9 +1,18 @@
-class BastNode
-  attr_accessor :value, :left, :right
+
+class LLNode
+  attr_accessor :value, :right
+  def initialize(val = 0, nptr = nil)
+    @value = val
+    @right = nptr
+  end
+end
+
+
+class BstNode < LLNode
+  attr_accessor :left
   def initialize(value = 0, left = nil, right = nil)
-    @value = value
-    @left = left
-    @right = right
+    @left=left
+    super(value,right)
   end
 end
 
@@ -96,7 +105,10 @@ class BstFunctions
     elsif node.value < value
       node.right = remove(value, node.right)
     else
-      if node.left != nil && node.right != nil
+      if node.right == nil and node.left == nil
+        return nil
+      end
+      if node.left != nil and node.right != nil
         rmin = min_ele(node.right)
         node.value = rmin.value
         root.right = remove(rmin.value, node.right)
@@ -105,6 +117,7 @@ class BstFunctions
       elsif node.right != nil
         node = node.right
       else
+        puts "lol"
         node = nil
       end
     end
@@ -139,14 +152,6 @@ class BstFunctions
     puts " bst generated "
   end
 end
-class LLNode
-  attr_accessor :val, :nptr
-  def initialize(val = 0, nptr = nil)
-    @val = val
-    @nptr = nptr
-  end
-end
-
 class LLFunctions
   attr_accessor :root, :n_arr
   def initialize(root = nil)
@@ -158,17 +163,17 @@ class LLFunctions
       @root = LLNode.new(val)
     else
       temp = @root
-      while temp.nptr != nil
-        temp = temp.nptr
+      while temp.right != nil
+        temp = temp.right
       end
-      temp.nptr = LLNode.new(val)
+      temp.right = LLNode.new(val)
     end
   end
   def traverse(node = @root)
     temp = node
     while temp != nil
-      print temp.val," "
-      temp = temp.nptr
+      print temp.value," "
+      temp = temp.right
     end
   end
   def generate_list(ll)
@@ -177,155 +182,177 @@ class LLFunctions
       ll.insert(i.to_i)
     end
     puts "linked list generated "
-    ll.traverse
   end
 
+  def find(value)
+    temp=@root
+    while temp.right != nil
+      if temp.value == value
+        return temp
+      else 
+        temp = temp.right
+      end
+    end
+    if temp.value == value
+      return temp
+    end
+    return nil
+  end
+  def reverse(node=@root)
+    prev=nil
+    curr=node
+    until curr.nil?
+      temp=curr.right
+      curr.right=prev
+      prev=curr
+      curr=temp
+    end
+    return @root = prev
+  end
+  def delete(value)
+    node=@root
+    if node.value == value
+      @root=@root.right
+      puts " node successfully deleted "
+      return 
+    end
+    while node.right.value != value
+      node = node.right
+    end
+    node.right=node.right.right
+    puts " node successfully deleted "
+  end
+end
+
+def bst_helper
+
+  tree=BstFunctions.new()
+  puts " type 0 to create a new bst"
+  puts " type 1 to load last bst"
+  b=gets.to_i
+  if b == 0
+    puts " Please enter the comma seprated elements to add in bst, like this ex: 1,2,3"
+    s = gets.chomp
+    temp_arr = s.split(",")
+    tree.n_arr = temp_arr.uniq
+    tree.generate_bst(tree)
+  elsif b == 1
+    tree.n_arr = File.read("sample_tree").split
+    tree.generate_bst(tree)
+  end
+
+  puts " type 1 for inorder travsersal of bst"
+  puts " type 2 for postorder travsersal of bst"
+  puts " type 3 for preorder travsersal of bst"
+  puts " type 4 for max element of bst"
+  puts " type 5 for min element of bst"
+  puts " type 6 to check if a element is present or not"
+  puts " type 7 to delete an element "
+  puts " type 8 to print all paths of this bst"
+  puts " type 9 to save and exit an element in bst"
+  puts " type 10 to exit without save "
+
+  while true
+    a = gets.to_i
+    case a  
+    when 1
+      puts  tree.inorder
+    when 2
+      puts  tree.postorder
+    when 3
+      puts  tree.preorder
+    when 4
+      puts  tree.max_ele.value
+    when 5
+      puts  tree.min_ele.value
+    when 6
+      puts " enter element to find"
+      a = gets.to_i
+      if tree.find(a)
+        puts "true"
+      else print " element not present "
+      end
+    when 7
+      puts " enter element to delete "
+      a = gets.to_i
+      if tree.find(a)
+        tree.remove(a)
+        tree.n_arr.delete(a)
+        puts " element successfully deleted "
+      else puts "element not present "
+      end
+    when 8
+      tree.printallpaths
+    when 9
+      #exit and save
+      File.open("sample_tree","w+") do |f|
+        f.puts(tree.n_arr)
+      end
+      break
+    when 10 
+      break
+    end
+  end
+end
+
+def ll_helper
+
+  ll=LLFunctions.new()
+  puts " type 0 to create a linked list"
+  puts " type 1 to load last linked list"
+  b=gets.to_i
+  if b == 0
+    puts " Please enter the comma seprated elements to add in linked list, like this ex: 1,2,3"
+    s = gets.chomp
+    temp_arr = s.split(",")
+    ll.n_arr = temp_arr.uniq
+    ll.generate_list(ll)
+  elsif b == 1
+    ll.n_arr = File.read("sample_linked_list").split
+    ll.generate_list(ll)
+  end
+  puts " type 1 for print linked list "
+  puts " type 2 to search an element in the linked list "
+  puts " type 3 to delete an element from linked list"
+  puts " type 4 to reverse the linked list"
+  puts " type 5 to save and exit an element in bst"
+  puts " type 6 to exit without save "
+
+  while true
+    a = gets.to_i
+    case a  
+    when 1
+      puts  ll.traverse
+    when 2
+      puts " enter element to search in linked list "
+      num = gets.to_i
+      puts ll.find(num).value
+    when 3
+      puts " enter element to delete in linked list " 
+      num = gets.to_i
+      if ll.find(num)
+        puts " found #{num} in the list \n now deleting the number"
+        ll.delete(num)
+        ll.n_arr.delete(num)
+      end
+    when 4
+      puts  ll.traverse(ll.reverse)
+    when 5
+     File.open("sample_linked_list","w+") do |f|
+       f.puts(ll.n_arr)
+     end
+    when 6
+      break
+    end
+  end
 end
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  puts " choose 0 to work on bst \n  choose 1 to work with linked list"
-  choice = gets
-
-  if choice == 0
-    #binary search trees
-    tree=BstFunctions.new()
-    puts " type 0 to create a new bst"
-    puts " type 1 to load last bst"
-    b=gets.to_i
-    if b == 0
-      puts " Please enter the comma seprated elements to add in bst, like this ex: 1,2,3"
-      s = gets.chomp
-      temp_arr = s.split(",")
-      tree.n_arr = temp_arr.uniq
-      tree.generate_bst(tree)
-    elsif b == 1
-      tree.n_arr = File.read("sample_tree").split
-      tree.generate_bst(tree)
-    end
-    puts " type 1 for inorder travsersal of bst"
-    puts " type 2 for postorder travsersal of bst"
-    puts " type 3 for preorder travsersal of bst"
-    puts " type 4 for max element of bst"
-    puts " type 5 for min element of bst"
-    puts " type 6 to check if a element is present or not"
-    puts " type 7 to delete an element "
-    puts " type 8 to print all paths of this bst"
-    puts " type 9 to save and exit an element in bst"
-    puts " type 10 to exit without save "
-
-    while true
-      a = gets.to_i
-      case a  
-      when 1
-        puts  tree.inorder
-      when 2
-        puts  tree.postorder
-      when 3
-        puts  tree.preorder
-      when 4
-        puts  tree.max_ele.value
-      when 5
-        puts  tree.min_ele.value
-      when 6
-        puts " enter element to find"
-        a = gets.to_i
-        if tree.find(a)
-          puts "true"
-        else print " element not present "
-        end
-      when 7
-        puts " enter element to delete "
-        a = gets.to_i
-        if tree.find(a)
-          tree.remove(a)
-          tree.n_arr.delete(a)
-          puts " element successfully deleted "
-        else puts "element not present "
-        end
-      when 8
-        tree.printallpaths()
-      when 9
-        #exit and save
-        File.open("sample_tree","w+") do |f|
-          f.puts(n_arr)
-        end
-        break
-      when 10 
-        break
-      end
-    end
-    # linked list
-  else 
-    ll=LLFunctions.new()
-    puts " type 0 to create a linked list"
-    puts " type 1 to load last linked list"
-    b=gets.to_i
-    if b == 0
-      puts " Please enter the comma seprated elements to add in linked list, like this ex: 1,2,3"
-      s = gets.chomp
-      temp_arr = s.split(",")
-      ll.n_arr = temp_arr.uniq
-      ll.generate_list(ll)
-    elsif b == 1
-      ll.n_arr = File.read("sample_linked_list").split
-      ll.generate_list(ll)
-    end
-
-  end
+puts " choose 0 to work on bst \n  choose 1 to work with linked list"
+choice = gets.to_i
+if choice == 0
+  bst_helper
+  #binary search tree    # linked list
+else
+  ll_helper 
+end
