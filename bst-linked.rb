@@ -1,4 +1,4 @@
-
+# LINKED LIST NODE 
 class LLNode
   attr_accessor :value, :right
   def initialize(val = 0, nptr = nil)
@@ -7,7 +7,7 @@ class LLNode
   end
 end
 
-
+# INHERITED THE LLNODE FOR VALUES AND RIGHT POINTER
 class BstNode < LLNode
   attr_accessor :left
   def initialize(value = 0, left = nil, right = nil)
@@ -79,10 +79,9 @@ class BstFunctions
   end
 
   def min_ele(node = @root)
-    while node.left != nil
-      node = node.left
-    end
-    return node
+    return nil if node.nil?
+    return node if node.left.nil?
+    return min_ele(node.left)
   end
 
   def find(node = self.root, value)
@@ -105,13 +104,10 @@ class BstFunctions
     elsif node.value < value
       node.right = remove(value, node.right)
     else
-      if node.right == nil and node.left == nil
-        return nil
-      end
       if node.left != nil and node.right != nil
         rmin = min_ele(node.right)
         node.value = rmin.value
-        root.right = remove(rmin.value, node.right)
+        node.right = remove(rmin.value, node.right)
       elsif node.left != nil
         node = node.left
       elsif node.right != nil
@@ -152,6 +148,8 @@ class BstFunctions
     puts " bst generated "
   end
 end
+
+# LINEKD LIST ALL FUNCTIONS
 class LLFunctions
   attr_accessor :root, :n_arr
   def initialize(root = nil)
@@ -348,7 +346,7 @@ def ll_helper
 end
 
 
-puts " choose 0 to work on bst \n  choose 1 to work with linked list"
+puts " choose 0 to work on bst \n choose 1 to work with linked list"
 choice = gets.to_i
 if choice == 0
   bst_helper
