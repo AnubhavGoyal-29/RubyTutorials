@@ -48,10 +48,6 @@ class BstFunctions
     end
   end
 
-
-
-
-
   def inorder(node = @root)
     if node
       inorder(node.left)
@@ -82,14 +78,8 @@ class BstFunctions
   end
 
   def min_ele(node = @root)
-
-
-
-  
-
     node = node.left while node.left
     node
-
   end
 
   def find(node = self.root, value)
@@ -103,14 +93,8 @@ class BstFunctions
     end
   end
 
-<<<<<<< HEAD
   def remove(value, node = @root)
     if !node
-=======
-  # remove function fixed
-  def remove(value, node=@root)
-    if node == nil
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
       return nil
     end
     if node.value > value
@@ -118,11 +102,7 @@ class BstFunctions
     elsif node.value < value
       node.right = remove(value, node.right)
     else
-<<<<<<< HEAD
       if node.left and node.right
-=======
-      if node.left and  node.right
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
         rmin = min_ele(node.right)
         node.value = rmin.value
         node.right = remove(rmin.value, node.right)
@@ -131,19 +111,12 @@ class BstFunctions
       elsif node.right
         node = node.right
       else
-<<<<<<< HEAD
-        puts "lol"
-=======
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
         node = nil
       end
     end
     node
   end
-<<<<<<< HEAD
-=======
 
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
   def print_path_utils(node = @root, basepath, arr)
     if !node
       return
@@ -154,28 +127,19 @@ class BstFunctions
       return 
     end
     basepath += " "
-<<<<<<< HEAD
     print_path_utils(node.left, basepath,arr)
     print_path_utils(node.right, basepath,arr)
-  end
-  def print_all_paths()
-    arr = []
-    basepath = ""
-    printpathutils(@root, basepath, arr)
-=======
-    print_path_utils(node.left, basepath, arr)
-    print_path_utils(node.right, basepath, arr)
   end
 
   def print_all_paths()
     arr = []
     basepath = ""
     print_path_utils(@root, basepath, arr)
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
     for i in arr do
       puts i
     end
   end
+
   def generate_bst(tree)
     puts " generating bst...."
     for i in tree.n_arr do
@@ -185,7 +149,6 @@ class BstFunctions
   end
 end
 
-<<<<<<< HEAD
 # LINEKD LIST ALL FUNCTIONS
 class LLFunctions
   attr_accessor :root, :n_arr
@@ -243,6 +206,7 @@ class LLFunctions
     return @root = prev
   end
   def delete(value)
+    @n_arr.delete(value)
     node = @root
     if node.value == value
       @root = @root.right
@@ -325,74 +289,8 @@ def bst_helper
     when 10 
       break
     end
-=======
-tree = BstFunctions.new()
-puts " type 0 to create a new bst"
-puts " type 1 to load last bst"
-b = gets.to_i
-if b == 0
-  puts " Please enter the comma seprated elements to add in bst, like this ex: 1,2,3"
-  n_arr = []
-  tree.n_arr = gets.chomp.split(",").uniq
-  tree.generate_bst(tree)
-elsif b == 1
-  tree.n_arr = File.read("sample_tree").split
-  tree.generate_bst(tree)
-end
-puts " type 1 for inorder travsersal of bst"
-puts " type 2 for postorder travsersal of bst"
-puts " type 3 for preorder travsersal of bst"
-puts " type 4 for max element of bst"
-puts " type 5 for min element of bst"
-puts " type 6 to check if a element is present or not"
-puts " type 7 to delete an element "
-puts " type 8 to print all paths of this bst"
-puts " type 9 to save and exit an element in bst"
-puts " type 10 to exit without save "
-
-while true
-  a = gets.to_i
-  case a  
-  when 1
-    puts tree.inorder
-  when 2
-    puts tree.postorder
-  when 3
-    puts tree.preorder
-  when 4
-    puts tree.max_ele.value
-  when 5
-    puts tree.min_ele.value
-  when 6
-    puts " enter element to find"
-    a = gets.to_i
-    if tree.find(a)
-      puts "true"
-    else print " element not present "
-    end
-  when 7
-    puts " enter element to delete "
-    a = gets.to_i
-    if tree.find(a)
-      tree.remove(a)
-      tree.n_arr.delete(a)
-      puts " element successfully deleted "
-    else puts "element not present "
-    end 
-  when 8
-    tree.print_all_paths()
-  when 9
-    #exit and save
-    File.open("sample_tree","w+") do |f|
-      f.puts(tree.n_arr)
-    end
-    break
-  when 10 
-    break
->>>>>>> 07dc16795cc53948a48cc36a6f83df9e742ea3c9
   end
 end
-
 def ll_helper
 
   ll = LLFunctions.new()
@@ -434,14 +332,16 @@ def ll_helper
         puts " found #{num} in the list \n now deleting the number"
         ll.delete(num)
         ll.n_arr.delete(num)
+        puts " now the array is "
+        puts ll.n_arr
       end
     when 4
       puts  ll.traverse(ll.reverse)
     when 5
       File.open("sample_linked_list","w+") do |f|
       f.puts(ll.n_arr)
+      end
       break
-     end
     when 6
       break
     end
