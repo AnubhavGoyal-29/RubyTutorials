@@ -16,22 +16,20 @@ class BstFunctions
     @n_arr = []
   end
 
-  # insert funtion
-  # if root is null add root , other wise go to the desired position of insert 
-  # then adding element iteratively
+=begin
+   insert funtion
+   if root is null add root , other wise go to the desired position of insert 
+   then adding element iteratively
+=end
   def insert(value)
-    if @root == nil
+    if !@root
       @root = BstNode.new(value)
     else
       curr = @root
       prev = @root
-      while curr != nil
+      while curr
         prev = curr
-        if value < curr.value
-          curr = curr.left
-        else 
-          curr = curr.right
-        end
+        curr = value < curr.value ? curr.left : curr.right
       end
 
       if value < prev.value
@@ -44,7 +42,7 @@ class BstFunctions
 
 
   def inorder(node = @root)
-    if node != nil
+    if node
       inorder(node.left)
       print node.value,"  "
       inorder(node.right)
@@ -52,7 +50,7 @@ class BstFunctions
   end
 
   def preorder(node = @root)
-    if node != nil
+    if node
       print node.value,"  "
       preorder(node.left)
       preorder(node.right)
@@ -60,7 +58,7 @@ class BstFunctions
   end
 
   def postorder(node = @root)
-    if node != nil
+    if node
       postorder(node.left)
       postorder(node.right)
       print node.value," "
@@ -68,22 +66,17 @@ class BstFunctions
   end
 
   def max_ele(node = @root)
-    node = @root
-    while node.right != nil
-      node = node.right
-    end
-    return node
+    node = node.right while node.right
+    node
   end
 
   def min_ele(node = @root)
-    while node.left != nil
-      node = node.left
-    end
-    return node
+    node = node.left while node.left
+    node
   end
 
   def find(node = self.root, value)
-    if node == nil
+    if !node
       return false
     elsif  node.value == value
       return true
@@ -103,42 +96,44 @@ class BstFunctions
     elsif node.value < value
       node.right = remove(value, node.right)
     else
-      if node.left != nil && node.right != nil
+      if node.left and  node.right
         rmin = min_ele(node.right)
         node.value = rmin.value
         node.right = remove(rmin.value, node.right)
-      elsif node.left != nil
+      elsif node.left
         node = node.left
-      elsif node.right != nil
+      elsif node.right
         node = node.right
       else
         node = nil
       end
     end
-    return node
+    node
   end
-  def printpathutils(node = @root, basepath, arr)
-    if node.nil?
+
+  def print_path_utils(node = @root, basepath, arr)
+    if !node
       return
     end
     basepath += node.value.to_s
-    if node.left.nil? and node.right.nil?
+    if !node.left and !node.right
       puts basepath
       return 
     end
     basepath += " "
-    printpathutils(node.left, basepath, arr)
-    printpathutils(node.right, basepath, arr)
+    print_path_utils(node.left, basepath, arr)
+    print_path_utils(node.right, basepath, arr)
   end
-  def printallpaths()
+
+  def print_all_paths()
     arr = []
     basepath = ""
-    printpathutils(@root, basepath, arr)
+    print_path_utils(@root, basepath, arr)
     for i in arr do
       puts i
     end
   end
-  def generatebst(tree)
+  def generate_bst(tree)
     puts " generating bst...."
     for i in tree.n_arr do
       tree.insert(i.to_i)
@@ -147,21 +142,18 @@ class BstFunctions
   end
 end
 
-tree=BstFunctions.new()
+tree = BstFunctions.new()
 puts " type 0 to create a new bst"
 puts " type 1 to load last bst"
 b = gets.to_i
 if b == 0
   puts " Please enter the comma seprated elements to add in bst, like this ex: 1,2,3"
   n_arr = []
-  s = gets.chomp
-  temp_arr = s.split(",")
-  tree.n_arr = temp_arr.uniq
-  puts n_arr.size
-  tree.generatebst(tree)
+  tree.n_arr = gets.chomp.split(",").uniq
+  tree.generate_bst(tree)
 elsif b == 1
   tree.n_arr = File.read("sample_tree").split
-  tree.generatebst(tree)
+  tree.generate_bst(tree)
 end
 puts " type 1 for inorder travsersal of bst"
 puts " type 2 for postorder travsersal of bst"
@@ -178,15 +170,15 @@ while true
   a = gets.to_i
   case a  
   when 1
-    puts  tree.inorder
+    puts tree.inorder
   when 2
-    puts  tree.postorder
+    puts tree.postorder
   when 3
-    puts  tree.preorder
+    puts tree.preorder
   when 4
-    puts  tree.max_ele.value
+    puts tree.max_ele.value
   when 5
-    puts  tree.min_ele.value
+    puts tree.min_ele.value
   when 6
     puts " enter element to find"
     a = gets.to_i
@@ -204,11 +196,11 @@ while true
     else puts "element not present "
     end 
   when 8
-    tree.printallpaths()
+    tree.print_all_paths()
   when 9
     #exit and save
     File.open("sample_tree","w+") do |f|
-      f.puts(n_arr)
+      f.puts(tree.n_arr)
     end
     break
   when 10 
