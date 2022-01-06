@@ -11,7 +11,7 @@ end
 class BstNode < LLNode
   attr_accessor :left
   def initialize(value = 0, left = nil, right = nil)
-    @left=left
+    @left = left
     super(value,right)
   end
 end
@@ -24,20 +24,15 @@ class BstFunctions
   end
 
   def insert(value)
-    if @root == nil
+    if !@root
       @root = BstNode.new(value)
     else
       curr = @root
       prev = @root
-      while curr != nil
+      while curr
         prev = curr
-        if value < curr.value
-          curr = curr.left
-        else 
-          curr = curr.right
-        end
+        curr = value < curr.value ? curr.left : curr.right
       end
-
       if value < prev.value
         prev.left = BstNode.new(value)
       else
@@ -47,7 +42,7 @@ class BstFunctions
   end
 
   def inorder(node = @root)
-    if node != nil
+    if node
       inorder(node.left)
       print node.value,"  "
       inorder(node.right)
@@ -55,7 +50,7 @@ class BstFunctions
   end
 
   def preorder(node = @root)
-    if node != nil
+    if node
       print node.value,"  "
       preorder(node.left)
       preorder(node.right)
@@ -63,7 +58,7 @@ class BstFunctions
   end
 
   def postorder(node = @root)
-    if node != nil
+    if node
       postorder(node.left)
       postorder(node.right)
       print node.value," "
@@ -71,21 +66,18 @@ class BstFunctions
   end
 
   def max_ele(node = @root)
-    node = @root
-    while node.right != nil
-      node = node.right
-    end
-    return node
+    node = node.right while node.right
+    node
   end
 
   def min_ele(node = @root)
     return nil if node.nil?
     return node if node.left.nil?
-    return min_ele(node.left)
+    min_ele(node.left)
   end
 
   def find(node = self.root, value)
-    if node == nil
+    if !node
       return false
     elsif  node.value == value
       return true
@@ -96,7 +88,7 @@ class BstFunctions
   end
 
   def remove(value, node = @root)
-    if node == nil
+    if !node
       return nil
     end
     if node.value > value
@@ -104,35 +96,35 @@ class BstFunctions
     elsif node.value < value
       node.right = remove(value, node.right)
     else
-      if node.left != nil and node.right != nil
+      if node.left and node.right
         rmin = min_ele(node.right)
         node.value = rmin.value
         node.right = remove(rmin.value, node.right)
-      elsif node.left != nil
+      elsif node.left
         node = node.left
-      elsif node.right != nil
+      elsif node.right
         node = node.right
       else
         puts "lol"
         node = nil
       end
     end
-    return node
+    node
   end
-  def printpathutils(node = @root, basepath, arr)
-    if node.nil?
+  def print_path_utils(node = @root, basepath, arr)
+    if !node
       return
     end
     basepath += node.value.to_s
-    if node.left.nil? and node.right.nil?
+    if !node.left and !node.right
       puts basepath
       return 
     end
     basepath += " "
-    printpathutils(node.left, basepath,arr)
-    printpathutils(node.right, basepath,arr)
+    print_path_utils(node.left, basepath,arr)
+    print_path_utils(node.right, basepath,arr)
   end
-  def printallpaths()
+  def print_all_paths()
     arr = []
     basepath = ""
     printpathutils(@root, basepath, arr)
@@ -157,19 +149,17 @@ class LLFunctions
     @n_arr = []
   end
   def insert(val)
-    if @root == nil
+    if !@root
       @root = LLNode.new(val)
     else
       temp = @root
-      while temp.right != nil
-        temp = temp.right
-      end
+      temp = temp.right while temp.right
       temp.right = LLNode.new(val)
     end
   end
   def traverse(node = @root)
     temp = node
-    while temp != nil
+    while temp
       print temp.value," "
       temp = temp.right
     end
@@ -183,8 +173,8 @@ class LLFunctions
   end
 
   def find(value)
-    temp=@root
-    while temp.right != nil
+    temp = @root
+    while temp.right
       if temp.value == value
         return temp
       else 
@@ -194,40 +184,40 @@ class LLFunctions
     if temp.value == value
       return temp
     end
-    return nil
+    nil
   end
-  def reverse(node=@root)
-    prev=nil
-    curr=node
-    until curr.nil?
-      temp=curr.right
-      curr.right=prev
-      prev=curr
-      curr=temp
+  def reverse(node = @root)
+    prev = nil
+    curr = node
+    until !curr
+      temp = curr.right
+      curr.right = prev
+      prev = curr
+      curr = temp
     end
     return @root = prev
   end
   def delete(value)
-    node=@root
+    node = @root
     if node.value == value
-      @root=@root.right
+      @root = @root.right
       puts " node successfully deleted "
       return 
     end
     while node.right.value != value
       node = node.right
     end
-    node.right=node.right.right
+    node.right = node.right.right
     puts " node successfully deleted "
   end
 end
 
 def bst_helper
 
-  tree=BstFunctions.new()
+  tree = BstFunctions.new()
   puts " type 0 to create a new bst"
   puts " type 1 to load last bst"
-  b=gets.to_i
+  b = gets.to_i
   if b == 0
     puts " Please enter the comma seprated elements to add in bst, like this ex: 1,2,3"
     s = gets.chomp
@@ -237,7 +227,7 @@ def bst_helper
   elsif b == 1
     tree.n_arr = File.read("sample_tree").split
     tree.generate_bst(tree)
-  end
+  end 
 
   puts " type 1 for inorder travsersal of bst"
   puts " type 2 for postorder travsersal of bst"
@@ -280,7 +270,7 @@ def bst_helper
       else puts "element not present "
       end
     when 8
-      tree.printallpaths
+      tree.print_all_paths
     when 9
       #exit and save
       File.open("sample_tree","w+") do |f|
@@ -295,15 +285,13 @@ end
 
 def ll_helper
 
-  ll=LLFunctions.new()
+  ll = LLFunctions.new()
   puts " type 0 to create a linked list"
   puts " type 1 to load last linked list"
-  b=gets.to_i
+  b = gets.to_i
   if b == 0
     puts " Please enter the comma seprated elements to add in linked list, like this ex: 1,2,3"
-    s = gets.chomp
-    temp_arr = s.split(",")
-    ll.n_arr = temp_arr.uniq
+    ll.n_arr = gets.chomp.split(",").uniq
     ll.generate_list(ll)
   elsif b == 1
     ll.n_arr = File.read("sample_linked_list").split
@@ -324,7 +312,11 @@ def ll_helper
     when 2
       puts " enter element to search in linked list "
       num = gets.to_i
-      puts ll.find(num).value
+      if ll.find(num)
+        puts true
+      else 
+        puts false
+      end
     when 3
       puts " enter element to delete in linked list " 
       num = gets.to_i
@@ -336,8 +328,9 @@ def ll_helper
     when 4
       puts  ll.traverse(ll.reverse)
     when 5
-     File.open("sample_linked_list","w+") do |f|
-       f.puts(ll.n_arr)
+      File.open("sample_linked_list","w+") do |f|
+      f.puts(ll.n_arr)
+      break
      end
     when 6
       break
